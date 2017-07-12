@@ -1,0 +1,53 @@
+Currency,Value,Shape,Size1,Size2,Thickness,Mass,Color
+USD,0.01,Circle,19.05,,1.55,2.5,bronze
+USD,0.05,Circle,21.209,,1.95,5,silver
+USD,0.1,Circle,1.35,,1.35,2.268,silver
+USD,0.25,Circle,24.257,,1.75,6.67,silver
+USD,1,Circle,26.492,,2,8.1,gold
+EUR,0.01,Circle,16.25,,1.67,2.3,bronze
+EUR,0.02,Circle,18.75,,1.67,3.06,bronze
+EUR,0.05,Circle,21.25,,1.67,3.92,bronze
+EUR,0.1,Circle,19.75,,1.93,4.1,gold
+EUR,0.2,Circle,22.25,,2.14,5.74,gold
+EUR,0.5,Circle,24.25,,2.38,7.8,gold
+EUR,1,Circle,23.25,,2.33,7.5,gold
+EUR,2,Circle,25.75,,2.2,8.5,silver
+JPY,1,Circle,20,,1.2,1,silver
+JPY,5,Circle,22,,1.5,3.75,gold
+JPY,10,Circle,23.5,,1.5,4.5,bronze
+JPY,50,Circle,21,,1.7,4,silver
+JPY,100,Circle,22.6,,1.7,4.8,silver
+JPY,500,Circle,26.5,,2,7,silver
+GBP,0.01,Circle,20.3,,1.65,3.56,bronze
+GBP,0.02,Circle,25.9,,2.03,7.12,bronze
+GBP,0.05,Circle,18,,1.89,3.25,silver
+GBP,0.1,Circle,24.5,,2.05,6.5,silver
+GBP,0.2,Reuleaux 7,21.4,,1.7,5,silver
+GBP,0.5,Reuleaux 7,27.3,,1.78,8,silver
+GBP,1,Polygon 12,23.43,23.03,2.8,8.75,silver
+GBP,2,Circle,28.4,,2.5,12,gold
+AUD,0.05,Circle,19.41,,1.3,2.83,silver
+AUD,0.1,Circle,23.6,,2,5.65,silver
+AUD,0.2,Circle,28.65,,2.5,11.3,silver
+AUD,0.5,Polygon 12,31.65,?,2.5,15.55,silver
+AUD,1,Circle,25,,3,9,gold
+AUD,2,Circle,20.5,,3.2,6.6,gold
+CAD,0.05,Circle,21.2,,1.76,3.95,silver
+CAD,0.1,Circle,18.03,,1.22,1.75,silver
+CAD,0.25,Circle,23.88,,1.58,4.4,silver
+CAD,1,Reuleaux 11,26.5,,1.75,6.27,gold
+CAD,2,Circle,28,,1.8,6.92,silver
+CHF,0.05,Circle,17.15,,1.25,1.8,gold
+CHF,0.1,Circle,19.15,,1.45,3,silver
+CHF,0.2,Circle,21.05,,1.65,4,silver
+CHF,0.5,Circle,18.2,,1.25,2.2,silver
+CHF,1,Circle,23.2,,1.55,4.4,silver
+CHF,2,Circle,27.4,,2.15,8.8,silver
+CHF,5,Circle,31.45,,2.35,13.2,silver
+CNY,1,Circle,,,,,silver
+CNY,0.5,Circle,,,,,gold
+CNY,0.1,Circle,,,,,silver
+SEK,1,Circle,19.5,,1.79,3.6,bronze
+SEK,2,Circle,22.5,,1.79,4.8,bronze
+SEK,5,Circle,23.75,,1.95,6.1,gold
+SEK,10,Circle,20.5,,2.9,6.6,gold
