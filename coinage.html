@@ -63,12 +63,13 @@ p {
 
 <p>
   Created by <a href="http://deriksson.se">Daniel Eriksson</a> using <a href="https://d3js.org/">d3.js</a>.
-  Sources for coin data: Respective National Mints, Wikipedia, Numista.
-  Exchange rates are from <span id="date"></span> and are provided by.
+  Sources for coin data: Respective national mints, Wikipedia, Numista.
+  Exchange rates are from <span id="date"></span> and are provided by <a href="http://fixer.io">Fixer.io</a>.
   The code is available as a github repo.
 </p>
 
 <script src="https://d3js.org/d3.v3.min.js"  charset="utf-8"></script>
+<script src="https://d3js.org/d3-queue.v3.min.js"></script>
 <script>
 
 var margin = {top: 20, right: 30, bottom: 40, left: 40},
@@ -101,11 +102,19 @@ var chart = d3.select(".chart")
     .append("g")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-d3.csv("data.csv", type, function(error, data) {
-  x.domain([0.8*d3.min(data, function(d) { return d.dollar_value; }),
-            1.5*d3.max(data, function(d) { return d.dollar_value; })]);
-  y.domain([0, 1.1*d3.max(data, function(d) { return +d.mass; })]);
-  dia.domain([0, d3.max(data, function(d) { return d.diameter; })]);
+d3.queue()
+  .defer(d3.csv, "coin_data.csv", type)
+  .defer(d3.json, "https://api.fixer.io/latest?base=USD")
+  .await(buildChart);
+
+function buildChart(error, coins, currencies) {
+  currencies["rates"]["USD"] = 1;
+  d3.select("#date").html(currencies["date"]);
+
+  x.domain([0.8*d3.min(coins, function(d) { return d.value / currencies["rates"][d.currency]; }),
+            1.5*d3.max(coins, function(d) { return d.value / currencies["rates"][d.currency]; })]);
+  y.domain([0, 1.1*d3.max(coins, function(d) { return +d.mass; })]);
+  dia.domain([0, d3.max(coins, function(d) { return d.diameter; })]);
 
   chart.append("g")
       .attr("class", "x axis")
@@ -136,16 +145,16 @@ d3.csv("data.csv", type, function(error, data) {
       .text("Mass (g)");
 
   chart.selectAll(".coin")
-      .data(data)
+      .data(coins)
       .enter().append("image")
       .attr("class", "coin")
-      .attr("x", function(d) { return x(d.dollar_value); })
+      .attr("x", function(d) { return x(d.value / currencies["rates"][d.currency]); })
       .attr("y", function(d) { return y(d.mass); })
       .attr("transform", function(d) { return "translate(-" + 0.5*dia(d.diameter) +
                                                        " -" + 0.5*dia(d.diameter)+ ")"; })
       .attr("height", function(d) { return dia(d.diameter); })
       .attr("width", function(d) { return dia(d.diameter); })
-      .attr("xlink:href", function(d) { return d.src });
+      .attr("xlink:href", function(d) { return d.img });
 
   d3.selectAll('image').on('mouseenter', function() {
       this.parentElement.appendChild(this);
@@ -175,7 +184,7 @@ d3.csv("data.csv", type, function(error, data) {
       .attr("marker-start", "url(#Start)")
       .attr("marker-end", "url(#Arrow)");
 
-});
+}
 
 function type(d) {
   d.value = +d.value; // coerce to number
