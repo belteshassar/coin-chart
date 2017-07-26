@@ -1,4 +1,7 @@
 <!DOCTYPE html>
+<!--
+© 2017 Daniel Eriksson
+-->
 <meta charset="utf-8">
 <style>
 
@@ -32,41 +35,52 @@
     stroke-width: 1px;
 }
 
-p {
+#colophon {
   font: 12px sans-serif;
 }
 
 </style>
-<svg class="chart" xmlns:xlink= "http://www.w3.org/1999/xlink">
+<svg class="chart" xmlns:xlink="http://www.w3.org/1999/xlink">
   <defs>
-       <marker id="Start" 
-               markerWidth="6" markerHeight="6" viewBox="-3 -3 6 6" 
-               refX="1" refY="0" 
-               markerUnits="strokeWidth" orient="auto">
-          <polygon points="1,0 3,3 -3,0 3,-3" fill="black"/>
-       </marker>
-    
-       <marker id="Arrow" 
-               markerWidth="6" markerHeight="6" viewBox="-3 -3 6 6" 
-               refX="-1" refY="0" 
-               markerUnits="strokeWidth" orient="auto">
-        <polygon points="-1,0 -3,3 3,0 -3,-3" fill="black"/>
+    <marker id="arrow-start"
+            markerWidth="6"
+            markerHeight="6"
+            viewBox="-3 -3 6 6"
+            refX="1"
+            refY="0"
+            markerUnits="strokeWidth"
+            orient="auto">
+      <polygon points="1,0 3,3 -3,0 3,-3" fill="black"/>
     </marker>
-    <marker id="arrow-start" markerWidth="10" markerHeight="10" refX="0" refY="3" orient="auto" markerUnits="strokeWidth" viewBox="-100 -100 0 100" >
-      <path d="M0,0 L0,6 L-9,3 z" fill="#000" />
-    </marker>
-    <marker id="arrow-end" markerWidth="10" markerHeight="10" refX="0" refY="3" orient="auto" markerUnits="strokeWidth">
-      <path d="M0,0 L0,6 L9,3 z" fill="#000" />
+    <marker id="arrow-end"
+            markerWidth="6"
+            markerHeight="6"
+            viewBox="-3 -3 6 6"
+            refX="-1"
+            refY="0"
+            markerUnits="strokeWidth"
+            orient="auto">
+      <polygon points="-1,0 -3,3 3,0 -3,-3" fill="black"/>
     </marker>
   </defs>
 </svg>
 
-<p>
-  Created by <a href="http://deriksson.se">Daniel Eriksson</a> using <a href="https://d3js.org/">d3.js</a>.
-  Sources for coin data: Respective national mints, Wikipedia, Numista.
-  Exchange rates are from <span id="date"></span> and are provided by <a href="http://fixer.io">Fixer.io</a>.
-  The code is available as a github repo.
-</p>
+<div id="colophon">
+  <p>
+    This graph shows includes coins of the <a href="https://en.wikipedia.org/wiki/Template:Most_traded_currencies">20 most traded currencies</a>.
+    When more than one version of the same denomination is circulated,
+    I have chosen to include the most recently minted.
+    Hower the mouse over a coin to bring it to the top.
+  </p>
+  <p>
+    Created by <a href="http://deriksson.se">Daniel Eriksson</a>
+    using <a href="https://d3js.org/">D3.js</a>.
+    Sources for coin data: Respective national mints, Wikipedia, Numista.
+    Exchange rates are from <span id="date"></span>
+    and are provided by <a href="http://fixer.io">Fixer.io</a>.
+    The code is available <a href="https://github.com/belteshassar/coin-chart">on Github</a>.
+  </p>
+</div>
 
 <script src="https://d3js.org/d3.v3.min.js"  charset="utf-8"></script>
 <script src="https://d3js.org/d3-queue.v3.min.js"></script>
@@ -75,6 +89,10 @@ p {
 var margin = {top: 20, right: 30, bottom: 40, left: 40},
     width = 1024 - margin.left - margin.right,
     height = 768 - margin.top - margin.bottom;
+
+d3.select("#colophon")
+    .style("margin-left", margin.left + "px")
+    .style("width", width + "px");
 
 var maxDiameter = height/12;
 
@@ -103,7 +121,7 @@ var chart = d3.select(".chart")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
 d3.queue()
-  .defer(d3.csv, "coin_data.csv", type)
+  .defer(d3.csv, "coin_data.csv")
   .defer(d3.json, "https://api.fixer.io/latest?base=USD")
   .await(buildChart);
 
@@ -181,14 +199,9 @@ function buildChart(error, coins, currencies) {
       .attr("y1", 0)
       .attr("x2", dia(refDiameter)/2-4)
       .attr("y2", 0)
-      .attr("marker-start", "url(#Start)")
-      .attr("marker-end", "url(#Arrow)");
+      .attr("marker-start", "url(#arrow-start)")
+      .attr("marker-end", "url(#arrow-end)");
 
-}
-
-function type(d) {
-  d.value = +d.value; // coerce to number
-  return d;
 }
 
 </script>
