@@ -71,6 +71,7 @@
     When more than one version of the same denomination is circulated,
     I have chosen to include the most recently minted.
     Hower the mouse over a coin to bring it to the top.
+    Leave the mouse there for a second to see a tooltip with the nominal value and the ISO code of the currency.
   </p>
   <p>
     Created by <a href="http://deriksson.se">Daniel Eriksson</a>
@@ -172,7 +173,9 @@ function buildChart(error, coins, currencies) {
                                                        " -" + 0.5*dia(d.diameter)+ ")"; })
       .attr("height", function(d) { return dia(d.diameter); })
       .attr("width", function(d) { return dia(d.diameter); })
-      .attr("xlink:href", function(d) { return d.img });
+      .attr("xlink:href", function(d) { return d.img })
+      .append("title")
+      .html(function(d) { return d.value + " " + d.currency; });
 
   d3.selectAll('image').on('mouseenter', function() {
       this.parentElement.appendChild(this);
