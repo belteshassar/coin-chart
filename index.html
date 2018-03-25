@@ -83,8 +83,7 @@
   </p>
 </div>
 
-<script src="https://d3js.org/d3.v3.min.js"  charset="utf-8"></script>
-<script src="https://d3js.org/d3-queue.v3.min.js"></script>
+<script src="https://d3js.org/d3.v5.min.js"></script>
 <script>
 
 var margin = {top: 20, right: 30, bottom: 40, left: 40},
@@ -97,23 +96,21 @@ d3.select("#colophon")
 
 var maxDiameter = height/12;
 
-var x = d3.scale.log()
+var x = d3.scaleLog()
     .range([0, width,]);
 
-var y = d3.scale.linear()
+var y = d3.scaleLinear()
     .range([height, 0]);
 
-var dia = d3.scale.linear()
+var dia = d3.scaleLinear()
     .range([0, maxDiameter]);
 
-var xAxis = d3.svg.axis()
+var xAxis = d3.axisBottom()
     .scale(x)
-    .orient("bottom")
     .tickFormat(function (d) { return x.tickFormat(5,d3.format(",.1r"))(d) });
 
-var yAxis = d3.svg.axis()
-    .scale(y)
-    .orient("left");
+var yAxis = d3.axisLeft()
+    .scale(y);
 
 var chart = d3.select(".chart")
     .attr("width", width + margin.left + margin.right)
@@ -121,12 +118,13 @@ var chart = d3.select(".chart")
     .append("g")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-d3.queue()
-  .defer(d3.csv, "coin_data.csv")
-  .defer(d3.json, "https://api.fixer.io/latest?base=USD")
-  .await(buildChart);
+Promise.all([
+    d3.csv("coin_data.csv"),
+    d3.json("https://api.fixer.io/latest?base=USD")])
+  .then(buildChart);
 
-function buildChart(error, coins, currencies) {
+function buildChart(data) {
+  let [coins, currencies] = data;
   currencies["rates"]["USD"] = 1;
   d3.select("#date").html(currencies["date"]);
 
@@ -141,10 +139,10 @@ function buildChart(error, coins, currencies) {
       .call(xAxis);
 
   // text label for the x axis
-  chart.append("text")    
-      .attr("class", "axislabel")         
+  chart.append("text")
+      .attr("class", "axislabel")
       .attr("transform",
-            "translate(" + (width/2) + " ," + 
+            "translate(" + (width/2) + " ," +
                            (height + margin.bottom - 10) + ")")
       .style("text-anchor", "middle")
       .text("Equivalent Value (USD)");
