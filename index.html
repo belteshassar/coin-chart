@@ -78,7 +78,7 @@
     using <a href="https://d3js.org/">D3.js</a>.
     Sources for coin data: Respective national mints, Wikipedia, Numista.
     Exchange rates are from <span id="date"></span>
-    and are provided by <a href="http://fixer.io">Fixer.io</a>.
+    and are provided by the European Central Bank.
     The code is available <a href="https://github.com/belteshassar/coin-chart">on Github</a>.
   </p>
 </div>
@@ -120,16 +120,22 @@ var chart = d3.select(".chart")
 
 Promise.all([
     d3.csv("coin_data.csv"),
-    d3.json("https://api.fixer.io/latest?base=USD")])
-  .then(buildChart);
+    d3.csv("https://sdw-wsrest.ecb.europa.eu/service/data/EXR/D..EUR.SP00.A?lastNObservations=1", {headers : {"Accept" : "text/csv"}})
+  ]).then(buildChart);
 
 function buildChart(data) {
-  let [coins, currencies] = data;
-  currencies["rates"]["USD"] = 1;
+  var [coins, ecbData] = data;
+  var currencies = {
+    date : ecbData[0]["TIME_PERIOD"],
+    rates : ecbData.reduce( function (acc, row) { acc[row["CURRENCY"]] = +row["OBS_VALUE"]; return acc;}, {} )
+  };
+  currencies["rates"]["EUR"] = 1;
+  const usdRate = currencies["rates"]["USD"];
+
   d3.select("#date").html(currencies["date"]);
 
-  x.domain([0.8*d3.min(coins, function(d) { return d.value / currencies["rates"][d.currency]; }),
-            1.5*d3.max(coins, function(d) { return d.value / currencies["rates"][d.currency]; })]);
+  x.domain([0.8*d3.min(coins, function(d) { return d.value / currencies["rates"][d.currency] * usdRate; }),
+            1.5*d3.max(coins, function(d) { return d.value / currencies["rates"][d.currency] * usdRate; })]);
   y.domain([0, 1.1*d3.max(coins, function(d) { return +d.mass; })]);
   dia.domain([0, d3.max(coins, function(d) { return d.diameter; })]);
 
@@ -165,7 +171,7 @@ function buildChart(data) {
       .data(coins)
       .enter().append("image")
       .attr("class", "coin")
-      .attr("x", function(d) { return x(d.value / currencies["rates"][d.currency]); })
+      .attr("x", function(d) { return x(d.value / currencies["rates"][d.currency] * usdRate); })
       .attr("y", function(d) { return y(d.mass); })
       .attr("transform", function(d) { return "translate(-" + 0.5*dia(d.diameter) +
                                                        " -" + 0.5*dia(d.diameter)+ ")"; })
