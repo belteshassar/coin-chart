@@ -39,7 +39,13 @@
   font: 12px sans-serif;
 }
 
+h1 {
+  font: 20px sans-serif;
+  font-weight: bold;
+}
+
 </style>
+<h1>Mass, value and size of coins of common currencies</h1>
 <svg class="chart" xmlns:xlink="http://www.w3.org/1999/xlink">
   <defs>
     <marker id="arrow-start"
@@ -72,6 +78,7 @@
     I have chosen to include the most recently minted.
     Hover the mouse over a coin to bring it to the top.
     Leave the mouse there for a second to see a tooltip with the nominal value and the ISO code of the currency.
+    You can also click a coin to bring it to the back if it obstructs other coins.
   </p>
   <p>
     Created by <a href="http://deriksson.se">Daniel Eriksson</a>
@@ -183,6 +190,10 @@ function buildChart(data) {
 
   d3.selectAll('image').on('mouseenter', function() {
       this.parentElement.appendChild(this);
+  });
+
+  d3.selectAll('image').on('click', function() {
+      this.parentElement.insertBefore(this, this.parentElement.firstChild);
   });
 
   var refDiameter = dia.ticks(10).slice(-2)[0];
