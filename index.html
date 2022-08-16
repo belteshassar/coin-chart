@@ -134,7 +134,7 @@ Promise.all([
 function buildChart(data) {
   var [coins, ecbData] = data;
   var currencies = {
-    date : ecbData[0]["TIME_PERIOD"],
+    date : ecbData[1]["TIME_PERIOD"],
     rates : ecbData.reduce( function (acc, row) { acc[row["CURRENCY"]] = +row["OBS_VALUE"]; return acc;}, {} )
   };
   currencies["rates"]["EUR"] = 1;
