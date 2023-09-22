@@ -128,7 +128,7 @@ var chart = d3.select(".chart")
 
 Promise.all([
     d3.csv("coin_data.csv"),
-    d3.csv("https://sdw-wsrest.ecb.europa.eu/service/data/EXR/D..EUR.SP00.A?lastNObservations=1", {headers : {"Accept" : "text/csv"}})
+    d3.csv("https://data-api.ecb.europa.eu/service/data/EXR/D..EUR.SP00.A?lastNObservations=1", {headers : {"Accept" : "text/csv"}})
   ]).then(buildChart);
 
 function buildChart(data) {
